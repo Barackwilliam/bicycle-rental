@@ -151,7 +151,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Already have an account?', style: TextStyle(color: Colors.grey[600])),
+                    Text('Already have an account?", style: TextStyle(color: Colors.grey[600])),
                     TextButton(onPressed: () => context.pop(), child: const Text('Login')),
                   ],
                 ),

@@ -110,7 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Don't have an account?', style: TextStyle(color: Colors.grey[600])),
+                    Text("Don't have an account?", style: TextStyle(color: Colors.grey[600])),
                     TextButton(onPressed: () => context.push('/register'), child: const Text('Register')),
                   ],
                 ),
