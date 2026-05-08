@@ -10,7 +10,6 @@ class StationsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stationsAsync = ref.watch(stationsProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Bike Stations')),
@@ -30,7 +29,6 @@ class StationsScreen extends ConsumerWidget {
   }
 
   Widget _buildStationCard(BuildContext context, WidgetRef ref, StationModel station) {
-    final theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -45,7 +43,7 @@ class StationsScreen extends ConsumerWidget {
             children: [
               Container(
                 width: 60, height: 60,
-                decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: theme.colorScheme.primary.withAlpha(25), borderRadius: BorderRadius.circular(12)),
                 child: Icon(Icons.location_on, color: theme.colorScheme.primary, size: 32),
               ),
               const SizedBox(width: 16),
@@ -82,3 +80,4 @@ class StationsScreen extends ConsumerWidget {
     );
   }
 }
+extTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.

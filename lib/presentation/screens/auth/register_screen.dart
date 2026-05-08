@@ -1,73 +1,94 @@
-// lib/presentation/screens/auth/login_screen.dart
+// lib/presentation/screens/auth/register_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
-import '../admin/admin_dashboard_screen.dart';
 import '../user/home_screen.dart';
-import 'register_screen.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool _obscurePassword = true;
+  bool _obscureConfirm = true;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _register() async {
+    final name = _nameController.text.trim();
     final email = _emailController.text.trim();
-
+    final phone = _phoneController.text.trim();
     final password = _passwordController.text.trim();
+    final confirm = _confirmPasswordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Please enter email and password',
+            'Please fill all required fields',
           ),
         ),
       );
-
       return;
     }
 
-    final success =
-        await ref.read(authProvider.notifier).login(email, password);
+    if (password != confirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Passwords do not match',
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Password must be at least 6 characters',
+          ),
+        ),
+      );
+      return;
+    }
+
+    final success = await ref.read(authProvider.notifier).register(
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        );
 
     if (success && mounted) {
-      final user = ref.read(authProvider).user!;
-
-      if (user.isAdmin) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const AdminDashboardScreen(),
-          ),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const HomeScreen(),
-          ),
-        );
-      }
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        ),
+        (_) => false,
+      );
     }
   }
 
@@ -77,6 +98,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Create Account'),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
@@ -85,48 +111,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 16),
 
-              // Logo & title
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(
-                        Icons.directions_bike_rounded,
-                        color: Colors.white,
-                        size: 44,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      'BikeRent',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.displayMedium,
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    Text(
-                      'Login to your account',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
+              Text(
+                'Register',
+                style: Theme.of(context).textTheme.displayMedium,
               ),
 
-              const SizedBox(height: 48),
+              const SizedBox(height: 6),
+
+              Text(
+                'Create your BikeRent account',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+
+              const SizedBox(height: 32),
 
               // Error banner
               if (authState.error != null) ...[
@@ -137,7 +136,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.error.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(
+                      10,
+                    ),
                     border: Border.all(
                       color: AppColors.error.withOpacity(0.3),
                     ),
@@ -169,14 +170,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ],
 
-              // Email
-              Text(
-                'Email',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+              _buildLabel('Full Name *'),
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _nameController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  hintText: 'Your full name',
+                  prefixIcon: Icon(
+                    Icons.person_outline,
+                  ),
+                ),
               ),
 
+              const SizedBox(height: 16),
+
+              _buildLabel('Email *'),
               const SizedBox(height: 8),
 
               TextFormField(
@@ -190,15 +200,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
-              // Password
-              Text(
-                'Password',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+              _buildLabel('Phone Number'),
+
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  hintText: '+255 712 345 678',
+                  prefixIcon: Icon(
+                    Icons.phone_outlined,
+                  ),
+                ),
               ),
+
+              const SizedBox(height: 16),
+
+              _buildLabel('Password *'),
 
               const SizedBox(height: 8),
 
@@ -206,7 +227,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
-                  hintText: '••••••••',
+                  hintText: 'At least 6 characters',
                   prefixIcon: const Icon(
                     Icons.lock_outline,
                   ),
@@ -225,11 +246,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
+              const SizedBox(height: 16),
+
+              _buildLabel(
+                'Confirm Password *',
+              ),
+
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: _obscureConfirm,
+                decoration: InputDecoration(
+                  hintText: 'Repeat password',
+                  prefixIcon: const Icon(
+                    Icons.lock_outline,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirm
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirm = !_obscureConfirm;
+                      });
+                    },
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 32),
 
-              // Login button
               ElevatedButton(
-                onPressed: authState.isLoading ? null : _login,
+                onPressed: authState.isLoading ? null : _register,
                 child: authState.isLoading
                     ? const SizedBox(
                         height: 20,
@@ -239,33 +290,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : const Text(
-                        'Login',
-                      ),
+                    : const Text('Register'),
               ),
 
               const SizedBox(height: 24),
 
-              // Register link
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Don’t have an account? ',
+                      'Already have an account? ',
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium,
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.push(
+                      onTap: () => Navigator.pop(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterScreen(),
-                        ),
                       ),
                       child: const Text(
-                        'Register',
+                        'Login',
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
@@ -282,6 +327,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
     );
   }
 }

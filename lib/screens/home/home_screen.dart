@@ -35,7 +35,7 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                        backgroundColor: theme.colorScheme.primary.withAlpha(25),
                         child: Icon(Icons.person, size: 32, color: theme.colorScheme.primary),
                       ),
                       const SizedBox(width: 16),

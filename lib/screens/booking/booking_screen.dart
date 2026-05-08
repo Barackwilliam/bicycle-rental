@@ -91,7 +91,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      color: theme.colorScheme.primary.withAlpha(25),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text('$_hours', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
@@ -107,7 +107,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               Text('Tsh ${NumberFormat('#,###').format(AppConstants.hourlyRate)}/hour', textAlign: TextAlign.center, style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
               const SizedBox(height: 32),
               Card(
-                color: theme.colorScheme.primary.withOpacity(0.05),
+                color: theme.colorScheme.primary.withAlpha(13),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(

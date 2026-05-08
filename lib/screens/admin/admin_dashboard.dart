@@ -35,7 +35,7 @@ class AdminDashboard extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withAlpha(51),
                         child: const Icon(Icons.admin_panel_settings, size: 32, color: Colors.white),
                       ),
                       const SizedBox(width: 16),

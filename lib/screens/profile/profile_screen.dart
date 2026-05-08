@@ -28,7 +28,7 @@ class ProfileScreen extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                        backgroundColor: theme.colorScheme.primary.withAlpha(25),
                         child: Icon(Icons.person, size: 50, color: theme.colorScheme.primary),
                       ),
                       const SizedBox(height: 16),
@@ -36,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: theme.colorScheme.primary.withAlpha(25), borderRadius: BorderRadius.circular(20)),
                         child: Text(user.role.toUpperCase(), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
                       ),
                     ],

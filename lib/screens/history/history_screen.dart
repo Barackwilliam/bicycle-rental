@@ -10,7 +10,6 @@ class HistoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingsAsync = ref.watch(userBookingsProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Booking History')),
@@ -30,7 +29,6 @@ class HistoryScreen extends ConsumerWidget {
   }
 
   Widget _buildBookingCard(BuildContext context, dynamic booking) {
-    final theme = Theme.of(context);
     final isActive = booking.status == AppConstants.bookingActive;
     final isCompleted = booking.status == AppConstants.bookingCompleted;
     final statusColor = isActive ? Colors.green : (isCompleted ? Colors.blue : Colors.red);
@@ -48,7 +46,7 @@ class HistoryScreen extends ConsumerWidget {
                 Text('Booking #${booking.id.substring(0, 8)}', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: statusColor.withAlpha(25), borderRadius: BorderRadius.circular(8)),
                   child: Text(booking.status.toUpperCase(), style: theme.textTheme.bodySmall?.copyWith(color: statusColor, fontWeight: FontWeight.w600)),
                 ),
               ],
@@ -84,3 +82,5 @@ class HistoryScreen extends ConsumerWidget {
     );
   }
 }
+      children: [
+          Icon(Icons.pedal_bike, size: 80, color: Colors

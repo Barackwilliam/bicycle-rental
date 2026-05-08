@@ -1,28 +1,32 @@
+// lib/data/models/user_model.dart
+
 class UserModel {
   final String id;
   final String name;
   final String email;
-  final String? phone;
-  final String role;
-  final DateTime? createdAt;
+  final String phone;
+  final String role; // 'user' or 'admin'
+  final DateTime createdAt;
 
   const UserModel({
     required this.id,
     required this.name,
     required this.email,
-    this.phone,
-    this.role = 'user',
-    this.createdAt,
+    required this.phone,
+    required this.role,
+    required this.createdAt,
   });
+
+  bool get isAdmin => role == 'admin';
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'],
-      role: json['role'] ?? 'user',
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
+      id: json['id'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String? ?? '',
+      role: json['role'] as String? ?? 'user',
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
@@ -33,7 +37,25 @@ class UserModel {
       'email': email,
       'phone': phone,
       'role': role,
-      'created_at': createdAt?.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? phone,
+    String? role,
+    DateTime? createdAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      createdAt: createdAt ?? this.createdAt,
+    );
   }
 }

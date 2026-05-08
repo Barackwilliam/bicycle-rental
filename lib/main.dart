@@ -1,11 +1,14 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'core/constants/supabase_constants.dart';
 import 'core/theme/app_theme.dart';
-import 'router/app_router.dart';
+import 'presentation/screens/auth/login_screen.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
@@ -13,21 +16,26 @@ void main() async {
     anonKey: SupabaseConstants.supabaseAnonKey,
   );
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    const ProviderScope(
+      child: BikeRentApp(),
+    ),
+  );
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+// Global Supabase client accessor
+final supabase = Supabase.instance.client;
+
+class BikeRentApp extends StatelessWidget {
+  const BikeRentApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
-
-    return MaterialApp.router(
-      title: 'Bicycle Rental',
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'BikeRent',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      routerConfig: router,
+      home: const LoginScreen(),
     );
   }
 }

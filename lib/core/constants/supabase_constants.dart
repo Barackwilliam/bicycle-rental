@@ -1,4 +1,4 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+// lib/core/constants/supabase_constants.dart
 
 class SupabaseConstants {
   // TODO: Replace with your actual Supabase credentials
@@ -11,12 +11,4 @@ class SupabaseConstants {
   static const String stationsTable = 'stations';
   static const String bikesTable = 'bikes';
   static const String bookingsTable = 'bookings';
-}
-
-// Helper extension
-extension SupabaseClientExtension on SupabaseClient {
-  dynamic get usersTable => from(SupabaseConstants.usersTable);
-  dynamic get stationsTable => from(SupabaseConstants.stationsTable);
-  dynamic get bikesTable => from(SupabaseConstants.bikesTable);
-  dynamic get bookingsTable => from(SupabaseConstants.bookingsTable);
 }
